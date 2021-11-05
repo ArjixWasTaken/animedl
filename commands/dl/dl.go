@@ -1,23 +1,28 @@
 package dl
 
 import (
-	"log"
+	"fmt"
 
-	"github.com/ArjixWasTaken/anime-dl-go/utils"
 	"github.com/urfave/cli/v2"
 )
 
-func PrintArgs(args cli.Args) {
-	arguments := utils.ArgsToStringList(args)
+func RunWithArgs(args cli.Args) {
+	// arguments := utils.ArgsToStringList(args)
 
-	app := &cli.App{
-		Name:        "dl",
-		Description: "Search and download an anime.",
-		Usage:       "anime dl [command options] [arguments...]",
-	}
+	// app := &cli.App{
+	// 	Name:  "dl",
+	// 	Usage: "Search and download an anime.",
+	// }
 
-	err := app.Run(arguments)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err := app.Run(arguments)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	search("overlord")
+}
+
+func search(query string) {
+	var choice string
+	fmt.Scanln(&choice)
+	fmt.Println(choice)
 }
