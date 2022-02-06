@@ -1,10 +1,12 @@
 package dl
 
 import (
+	"errors"
 	"fmt"
+	"log"
 
 	"github.com/ArjixWasTaken/animedl/animedl/commands"
-	"github.com/ArjixWasTaken/animedl/animedl/providers/allProviders"
+	"github.com/ArjixWasTaken/animedl/animedl/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -12,23 +14,36 @@ type DL struct {
 	commands.Command
 }
 
-func RunWithArgs(args cli.Args) {
-	// arguments := utils.ArgsToStringList(args)
-	// if len(arguments) == 0 {
-	// 	return
-	// }
+func RunWithArgs(args cli.Args) error {
+	arguments := utils.ArgsToStringList(args)
+	if len(arguments) == 0 {
+		return errors.New("error: no arguments for `dl` were given")
+	}
 
-	// app := &cli.App{
-	// 	Name:  "dl",
-	// 	Usage: "Search and download an anime.",
-	// }
+	query, found, newArgs := utils.ParseQueryFromArgs(arguments)
+	if !found {
+		return errors.New("error: no query was given for `dl`")
+	}
 
-	// err := app.Run(arguments)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	app := &cli.App{
+		Name:            "anime dl",
+		Usage:           "Search and download an anime.",
+		UsageText:       "anime dl \"overlord\"",
+		HideHelp:        true,
+		HideHelpCommand: true,
+		Action: func(c *cli.Context) error {
 
-	providers := allProviders.GetProviders()
+			fmt.Println(c.Args()) // should be empty for now
+			fmt.Println(query)    // should be "overlord iii" if ran by the Makefile
 
-	fmt.Println(providers)
+			return nil
+		},
+	}
+
+	err := app.Run(newArgs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
 }

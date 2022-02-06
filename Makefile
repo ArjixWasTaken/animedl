@@ -1,4 +1,4 @@
-.PHONY: build run help
+.PHONY: build run rundl
 
 
 
@@ -9,4 +9,4 @@ run:  # Runs animedl
 	@cd dist && .\main.exe
 
 rundl:  # Runs animedl
-	@cd dist && .\main.exe dl
+	@cd dist && .\main.exe dl "overlord iii"

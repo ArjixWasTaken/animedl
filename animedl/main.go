@@ -17,11 +17,14 @@ func main() {
 				Name:  "dl",
 				Usage: "Search and download an anime.",
 				Action: func(c *cli.Context) error {
-					dl.RunWithArgs(c.Args())
+					error := dl.RunWithArgs(c.Args())
+					if error != nil {
+						log.Fatal(error)
+					}
 					return nil
 				},
 				SkipFlagParsing: false,
-				HideHelp:        false,
+				HideHelp:        true,
 				Hidden:          false,
 			}, /*,
 			{
