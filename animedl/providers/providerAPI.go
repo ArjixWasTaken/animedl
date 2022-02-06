@@ -1,11 +1,13 @@
 package providers
 
+import "fmt"
+
 type SearchResult struct {
 	Title   string
 	Url     string
 	ApiName string
 	Poster  string
-	Year    int
+	Year    int64
 }
 
 type DubStatus int
@@ -40,7 +42,7 @@ type LoadResponse struct {
 	TvType      TvStatus
 	Poster      string
 	Description string
-	Year        int
+	Year        int64
 	Tags        []string
 }
 
@@ -67,4 +69,8 @@ type Provider struct {
 
 func (p Provider) String() string {
 	return "<Provider `" + p.Name + "`>"
+}
+
+func (s SearchResult) String() string {
+	return fmt.Sprintf("<Result: `%s` - %d>", s.Title, s.Year)
 }

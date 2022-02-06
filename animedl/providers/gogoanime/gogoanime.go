@@ -2,6 +2,7 @@ package gogoanime
 
 import (
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/ArjixWasTaken/animedl/animedl/providers"
@@ -9,8 +10,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-var mainUrl string = "https://gogoanime.film"
-var apiName string = "gogoanime"
+const mainUrl, apiName = "https://gogoanime.film", "gogoanime"
 
 var GogoanimeProvider = &providers.Provider{
 	Name:    apiName,
@@ -26,12 +26,18 @@ var GogoanimeProvider = &providers.Provider{
 			var results = make([]providers.SearchResult, soup.Find(".last_episodes li").Length())
 
 			soup.Find(".last_episodes li").Each(func(i int, s *goquery.Selection) {
+				var year int64 = 0
+
+				if s.Find(".released").First() != nil {
+					year, err = strconv.ParseInt(strings.Trim(strings.Split(s.Find(".released").First().Text(), ":")[1], " "), 10, 64)
+				}
+
 				results[i] = providers.SearchResult{
-					Title:   strings.Replace(s.Find(".name").First().Text(), " (Dub)", "", 1),
-					Url:     s.Find(".name > a").First().AttrOr("href", "none"),
+					Title:   s.Find(".name").First().Text(),
+					Url:     mainUrl + s.Find(".name > a").First().AttrOr("href", "none"),
 					ApiName: apiName,
 					Poster:  s.Find("img").First().AttrOr("src", "none"),
-					Year:    0,
+					Year:    year,
 				}
 			})
 
