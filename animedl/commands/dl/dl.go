@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/ArjixWasTaken/animedl/animedl/commands"
+	"github.com/ArjixWasTaken/animedl/animedl/providers/allProviders"
 	"github.com/ArjixWasTaken/animedl/animedl/utils"
 	"github.com/urfave/cli/v2"
 )
@@ -31,10 +32,24 @@ func RunWithArgs(args cli.Args) error {
 		UsageText:       "anime dl \"overlord\"",
 		HideHelp:        true,
 		HideHelpCommand: true,
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "provider",
+				Value: "gogoanime",
+				Usage: "the provider to use",
+			},
+		},
 		Action: func(c *cli.Context) error {
 
-			fmt.Println(c.Args()) // should be empty for now
-			fmt.Println(query)    // should be "overlord iii" if ran by the Makefile
+			provider := allProviders.GetProviderByName(c.String("provider"))
+
+			if provider == nil {
+				log.Fatal("That provider does not exist.")
+			} else {
+
+				results := provider.Search(query)
+				fmt.Println(results)
+			}
 
 			return nil
 		},

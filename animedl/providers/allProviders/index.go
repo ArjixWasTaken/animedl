@@ -11,3 +11,14 @@ func GetProviders() []*providers.Provider {
 
 	return Providers
 }
+
+func GetProviderByName(name string) *providers.Provider {
+
+	for _, provider := range GetProviders() {
+		if provider.Name == name {
+			return provider
+		}
+	}
+
+	return nil
+}
