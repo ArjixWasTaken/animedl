@@ -1,6 +1,16 @@
 package utils
 
-import "github.com/urfave/cli/v2"
+import (
+	"bufio"
+	"fmt"
+	"os"
+
+	"github.com/ArjixWasTaken/animedl/animedl/providers"
+	"github.com/appgate-sdp-int/tabulate"
+	"github.com/urfave/cli/v2"
+)
+
+var reader *bufio.Reader = bufio.NewReader(os.Stdin)
 
 func ArgsToStringList(args cli.Args) []string {
 	items := make([]string, args.Len())
@@ -13,7 +23,6 @@ func ArgsToStringList(args cli.Args) []string {
 }
 
 func ParseQueryFromArgs(args []string) (string, bool, []string) {
-
 	var query string = ""
 	var found bool = false
 	newArgs := make([]string, 0, len(args))
@@ -39,4 +48,29 @@ func ParseQueryFromArgs(args []string) (string, bool, []string) {
 	}
 
 	return query, found, newArgs
+}
+
+type Row struct {
+	SlNo  int
+	Title string
+	Year  int64
+}
+
+func TabulateTheSearchResults(results []providers.SearchResult) string {
+	var rows []*Row = make([]*Row, 0, len(results))
+
+	for index, row := range results {
+		rows = append(rows, &Row{index + 1, row.Title, row.Year})
+	}
+	asText, _ := tabulate.Tabulate(
+		rows, &tabulate.Layout{Format: tabulate.PipeFormat},
+	)
+	return asText
+}
+
+func GetUserInput(message string) string {
+	fmt.Print(message)
+	input, _ := reader.ReadString('\n')
+
+	return input
 }

@@ -1,6 +1,7 @@
 package gogoanime
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -28,8 +29,10 @@ var GogoanimeProvider = &providers.Provider{
 			soup.Find(".last_episodes li").Each(func(i int, s *goquery.Selection) {
 				var year int64 = 0
 
-				if s.Find(".released").First() != nil {
-					year, err = strconv.ParseInt(strings.Trim(strings.Split(s.Find(".released").First().Text(), ":")[1], " "), 10, 64)
+				yearText := s.Find(".released").First()
+
+				if yearText != nil {
+					year, err = strconv.ParseInt(strings.Trim(strings.Split(yearText.Text(), ":")[1], " "), 10, 64)
 				}
 
 				results[i] = providers.SearchResult{
@@ -46,6 +49,15 @@ var GogoanimeProvider = &providers.Provider{
 		return nil
 	},
 	Load: func(url string) providers.LoadResponse {
+		response := utils.Get(url, map[string]string{})
+		soup, err := utils.Soupify(*response)
+
+		if err != nil {
+			fmt.Println(soup)
+		} else {
+			log.Fatal(err)
+		}
+
 		return providers.LoadResponse{}
 	},
 	LoadLinks: func(url string) []providers.ExtractorLink {
