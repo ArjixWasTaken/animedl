@@ -31,7 +31,7 @@ var GogoanimeProvider = &providers.Provider{
 
 				yearText := s.Find(".released").First()
 
-				if yearText != nil {
+				if yearText != nil && strings.Contains(yearText.Text(), ":") {
 					year, err = strconv.ParseInt(strings.Trim(strings.Split(yearText.Text(), ":")[1], " "), 10, 64)
 				}
 
