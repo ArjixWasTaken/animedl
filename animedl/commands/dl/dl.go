@@ -6,9 +6,12 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/ArjixWasTaken/animedl/animedl/providers/allProviders"
 	"github.com/ArjixWasTaken/animedl/animedl/utils"
+	"github.com/briandowns/spinner"
+	"github.com/ttacon/chalk"
 	"github.com/urfave/cli/v2"
 )
 
@@ -19,16 +22,16 @@ func getIndexFromUser(start int, end int) int64 {
 		return 0
 	}
 
-	inputAsNum, err := strconv.ParseInt(input, 10, 64)
+	inputAsNum, err := strconv.ParseInt(input, 10, 0)
 
 	if err != nil {
-		fmt.Println("Wrong input! Enter a number from " + strconv.Itoa(start) + " to " + strconv.Itoa(end))
-		fmt.Println(err.Error())
+		fmt.Println(chalk.Underline.TextStyle("Wrong input! Enter a number from " + strconv.Itoa(start) + " to " + strconv.Itoa(end)))
+		fmt.Println(chalk.Red, err.Error(), chalk.Reset)
 		return getIndexFromUser(start, end)
 	}
 
 	if int(inputAsNum) < start || int(inputAsNum) > end {
-		fmt.Println("Wrong input! Enter a number from " + strconv.Itoa(start) + " to " + strconv.Itoa(end))
+		fmt.Println(chalk.Underline.TextStyle("Wrong input! Enter a number from " + strconv.Itoa(start) + " to " + strconv.Itoa(end)))
 		return getIndexFromUser(start, end)
 	}
 
@@ -69,13 +72,19 @@ func RunWithArgs(args cli.Args) error {
 			} else {
 				var index int
 
+				s := spinner.New(spinner.CharSets[9], 200*time.Millisecond)
+				s.Suffix = fmt.Sprintf(" Searching for %s", chalk.Italic.TextStyle(query))
+				s.Start()
+
 				results := provider.Search(query)
+
+				s.Stop()
 				fmt.Println(utils.TabulateTheSearchResults(results))
 
 				index = int(getIndexFromUser(1, len(results)))
 
-				fmt.Printf("Selected [%d]: %s - %d\n", index+1, results[index].Title, results[index].Year)
-				fmt.Printf("Fetching info for `%s` from `%s`...\n", results[index].Title, provider.Name)
+				fmt.Println(chalk.Green, fmt.Sprintf("Selected [%d]: %s - %d\n", index+1, results[index].Title, results[index].Year), chalk.Reset)
+				fmt.Println(chalk.Italic.TextStyle(fmt.Sprintf("Fetching info for `%s` from `%s`...\n", chalk.Cyan.Color(results[index].Title), chalk.Yellow.Color(provider.Name))))
 				anime := provider.Load(results[index].Url)
 				fmt.Println(anime)
 			}

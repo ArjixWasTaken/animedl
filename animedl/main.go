@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/ArjixWasTaken/animedl/animedl/commands/dl"
+	"github.com/ttacon/chalk"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,6 +24,7 @@ func main() {
 				Action: func(c *cli.Context) error {
 					error := dl.RunWithArgs(c.Args())
 					if error != nil {
+						fmt.Println(chalk.Red, "Error: "+error.Error(), chalk.Reset)
 						log.Fatal(error)
 					}
 					return nil

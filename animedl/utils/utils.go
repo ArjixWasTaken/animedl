@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/ArjixWasTaken/animedl/animedl/providers"
-	"github.com/appgate-sdp-int/tabulate"
+	"github.com/jedib0t/go-pretty/v6/list"
+	"github.com/ttacon/chalk"
 	"github.com/urfave/cli/v2"
 )
 
@@ -56,16 +58,49 @@ type Row struct {
 	Year  int64
 }
 
+func getTheLongestString(items []string) string {
+	var longestStr string = ""
+
+	for _, item := range items {
+		if len(item) > len(longestStr) {
+			longestStr = item
+		}
+	}
+
+	return longestStr
+}
+
 func TabulateTheSearchResults(results []providers.SearchResult) string {
-	var rows []*Row = make([]*Row, 0, len(results))
+
+	var longestStr string = ""
+
+	for _, item := range results {
+		if len(item.Title) > len(longestStr) {
+			longestStr = item.Title
+		}
+	}
+
+	padding := len(longestStr)
+
+	l := list.NewWriter()
+	l.SetStyle(list.StyleBulletCircle)
 
 	for index, row := range results {
-		rows = append(rows, &Row{index + 1, row.Title, row.Year})
+		indexStr := fmt.Sprint(index + 1)
+
+		if len(indexStr) == 1 {
+			indexStr = " " + indexStr
+		}
+
+		itemStr := chalk.Magenta.Color(fmt.Sprintf("%s. %s", indexStr, row.Title))
+
+		if row.Year != 0 {
+			itemStr += strings.Repeat(" ", padding-len(row.Title))
+			itemStr += fmt.Sprintf(" [%s]", chalk.Green.Color(fmt.Sprint(row.Year)))
+		}
+		l.AppendItem(itemStr)
 	}
-	asText, _ := tabulate.Tabulate(
-		rows, &tabulate.Layout{Format: tabulate.PipeFormat},
-	)
-	return asText
+	return l.Render()
 }
 
 func GetUserInput(message string) string {
