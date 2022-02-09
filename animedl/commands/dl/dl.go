@@ -58,7 +58,7 @@ func RunWithArgs(args cli.Args) error {
 				Name:  "provider",
 				Value: "gogoanime",
 				Usage: "the provider to use",
-			},
+			}, // TODO(Arjix): Add a `--choice` param to skip the search section.
 		},
 		Action: func(c *cli.Context) error {
 

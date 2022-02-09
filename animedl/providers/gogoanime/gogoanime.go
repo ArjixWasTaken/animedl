@@ -103,6 +103,7 @@ var GogoanimeProvider = &providers.Provider{
 		})
 
 		var episodes []providers.Episode = make([]providers.Episode, 0)
+		// TODO(Arjix): Actually scrape the gogoanime episodes.
 
 		return providers.LoadResponse{
 			ApiName:     apiName,
@@ -116,6 +117,7 @@ var GogoanimeProvider = &providers.Provider{
 		}
 	},
 	LoadLinks: func(url string) []providers.ExtractorLink {
+		// TODO(Arjix): Implement this.
 		return nil
 	},
 }

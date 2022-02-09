@@ -8,6 +8,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// TODO(Arjix): Create/Parse the config file.
+// TODO(Arjix): Load the config file and provide it to the sub-commands.
+
 func main() {
 	app := &cli.App{
 		Name:  "anime-dl",
@@ -26,7 +29,7 @@ func main() {
 				SkipFlagParsing: false,
 				HideHelp:        true,
 				Hidden:          false,
-			}, /*,
+			}, /*, // TODO(Arjix): Implement more sub-commands.
 			{
 				Name:  "watch",
 				Usage: "Watch anime from your watch list.",
