@@ -47,11 +47,12 @@ func RunWithArgs(args cli.Args) error {
 	}
 
 	app := &cli.App{
-		Name:            "anime dl",
-		Usage:           "Search and download an anime.",
-		UsageText:       "anime dl \"overlord\"",
-		HideHelp:        true,
-		HideHelpCommand: true,
+		Name:                   "anime dl",
+		Usage:                  "Search and download an anime.",
+		UsageText:              "anime dl \"overlord\"",
+		HideHelp:               true,
+		HideHelpCommand:        true,
+		UseShortOptionHandling: true,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "provider",
@@ -66,10 +67,17 @@ func RunWithArgs(args cli.Args) error {
 			if provider == nil {
 				log.Fatal("That provider does not exist.")
 			} else {
+				var index int
+
 				results := provider.Search(query)
 				fmt.Println(utils.TabulateTheSearchResults(results))
-				index := int(getIndexFromUser(1, len(results)))
-				fmt.Println(results[index])
+
+				index = int(getIndexFromUser(1, len(results)))
+
+				fmt.Printf("Selected [%d]: %s - %d\n", index+1, results[index].Title, results[index].Year)
+				fmt.Printf("Fetching info for `%s` from `%s`...\n", results[index].Title, provider.Name)
+				anime := provider.Load(results[index].Url)
+				fmt.Println(anime)
 			}
 
 			return nil
@@ -78,7 +86,7 @@ func RunWithArgs(args cli.Args) error {
 
 	err := app.Run(newArgs)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 
 	return nil

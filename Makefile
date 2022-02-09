@@ -9,4 +9,4 @@ run:    # Runs animedl
 	@cd dist && .\main.exe
 
 rundl:  # Runs animedl
-	@cd dist && .\main.exe dl "naruto"
+	@cd dist && .\main.exe dl "overlord"

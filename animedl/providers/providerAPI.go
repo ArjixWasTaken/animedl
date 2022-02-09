@@ -1,6 +1,10 @@
 package providers
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 type SearchResult struct {
 	Title   string
@@ -25,6 +29,19 @@ const (
 	Cancelled TvStatus = iota
 )
 
+func (t TvStatus) String() string {
+	switch t {
+	case Ongoing:
+		return "Ongoing"
+	case Completed:
+		return "Completed"
+	case Cancelled:
+		return "Cancelled"
+	}
+
+	return "Completed"
+}
+
 type Episode struct {
 	Title       string
 	Url         string
@@ -39,7 +56,7 @@ type LoadResponse struct {
 	Url         string
 	ApiName     string
 	Episodes    []Episode
-	TvType      TvStatus
+	TvStatus    TvStatus
 	Poster      string
 	Description string
 	Year        int64
@@ -73,4 +90,20 @@ func (p Provider) String() string {
 
 func (s SearchResult) String() string {
 	return fmt.Sprintf("<Result: `%s` - %d>", s.Title, s.Year)
+}
+
+func (l LoadResponse) String() string {
+	text := "LoadResponse {\n\t"
+	text += "Title: " + l.Title + "\n\t"
+	text += "Url: " + l.Url + "\n\t"
+	text += "ApiName: " + l.ApiName + "\n\t"
+	text += "Episodes: " + strconv.Itoa(len(l.Episodes)) + "\n\t"
+	text += "TvStatus: " + l.TvStatus.String() + "\n\t"
+	text += "Poster: " + l.Poster + "\n\t"
+	text += "Description: " + l.Description + "\n\t"
+	text += "Year: " + strconv.Itoa(int(l.Year)) + "\n\t"
+	text += "Tags:  [" + strings.Join(l.Tags, ", ") + "]"
+	text += "\n}"
+
+	return text
 }
