@@ -58,18 +58,6 @@ type Row struct {
 	Year  int64
 }
 
-func getTheLongestString(items []string) string {
-	var longestStr string = ""
-
-	for _, item := range items {
-		if len(item) > len(longestStr) {
-			longestStr = item
-		}
-	}
-
-	return longestStr
-}
-
 func TabulateTheSearchResults(results []providers.SearchResult) string {
 
 	var longestStr string = ""
@@ -83,7 +71,7 @@ func TabulateTheSearchResults(results []providers.SearchResult) string {
 	padding := len(longestStr)
 
 	l := list.NewWriter()
-	l.SetStyle(list.StyleBulletCircle)
+	l.SetStyle(list.StyleBulletTriangle)
 
 	for index, row := range results {
 		indexStr := fmt.Sprint(index + 1)
