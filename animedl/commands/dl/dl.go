@@ -83,9 +83,13 @@ func RunWithArgs(args cli.Args) error {
 
 				index = int(getIndexFromUser(1, len(results)))
 
-				fmt.Println(chalk.Green, fmt.Sprintf("Selected [%d]: %s - %d\n", index+1, results[index].Title, results[index].Year), chalk.Reset)
+				fmt.Printf("%sSelected [%d]: %s - %d%s\n", chalk.Green, index+1, results[index].Title, results[index].Year, chalk.Reset)
 				fmt.Println(chalk.Italic.TextStyle(fmt.Sprintf("Fetching info for `%s` from `%s`...\n", chalk.Cyan.Color(results[index].Title), chalk.Yellow.Color(provider.Name))))
 				anime := provider.Load(results[index].Url)
+
+				fmt.Printf("Downloading %s episodes of `%s` from `%s`\n", chalk.Magenta.Color(strconv.Itoa(len(anime.Episodes))), chalk.Italic.TextStyle(chalk.Cyan.Color(anime.Title)), chalk.Italic.TextStyle(chalk.Yellow.Color(provider.Name)))
+				// TODO(Arjix): Parse the episodes param and apply it here.
+
 				fmt.Println(anime)
 			}
 
